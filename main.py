@@ -38,7 +38,7 @@ def get_image(update, context, ocr_reader=EasyOcrReader()):
     # img = cv2.imdecode(np.fromstring(BytesIO(photo.download_as_bytearray()).getvalue(), np.uint8), 1)
 
     # pred = model.predict(img)
-    answer = ocr_reader.process(img_path)
+    answer = ocr_reader.process_image(img_path)
     print(answer)
 
     response = answer
