@@ -12,6 +12,16 @@ class EasyOcrReader:
         return answer
 
     def postprocess(self, bounds):
-        main_ingredient_list = bounds[0][1]
-        
+        main_ingredient_list = ""
+        for bound in bounds:
+            main_ingredient_list += bound[1].lower() + ' '
+
+        # Remove unnecessary punctuation and other symbols
+        unnecessary_symbols = ";:.,!?%#\"'/\\"
+        for sym in unnecessary_symbols:
+            main_ingredient_list = main_ingredient_list.replace(sym, '')
+
+        # Remove extra spaces
+        main_ingredient_list = " ".join(main_ingredient_list.split(' '))
+
         return main_ingredient_list
