@@ -17,7 +17,7 @@ def start_command(update, context):
 
 
 def help_command(update, context):
-    update.message.reply_text('Просто отправь фото этикетки;)')
+    update.message.reply_text('Просто отправь фото cостава продукта;)')
 
 
 def handle_message(update, context):

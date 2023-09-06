@@ -15,7 +15,7 @@ def sample_responses(input_text):
 
 
 def photo_response(pred):
-    df = pd.read_csv('data/Описание .csv')
+    df = pd.read_csv('data/Описание.csv')
     with open('data/labels.json', 'r') as fp:
         labels = json.load(fp)
         pred = labels[str(pred)]
