@@ -1,3 +1,10 @@
+# examples of product
+examples/
+images/
+
+# keys
+Constants.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
