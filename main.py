@@ -16,38 +16,37 @@ class TelegramBot:
     def __init__(self):
         self.updater = Updater(os.environ['TELEGRAM_BOT_TOKEN'], use_context=True)
         self.ocr_reader = EasyOcrReader()
-        self.gpt_helper = ChatGPTExpert()
+        self.gpt_helper = ChatGPTExpert(api_key=os.environ['OPENAI_API_KEY'], model_name=os.environ['OPENAI_MODEL'])
 
     @staticmethod
     def start_command(update, context):
-        update.message.reply_text(f'Hello {update.message.from_user.first_name}!')
+        update.message.reply_text(f'Привет {update.message.from_user.first_name}!')
 
     @staticmethod
     def help_command(update, context):
         update.message.reply_text('Просто отправь фото cостава продукта;)')
 
-    @staticmethod
-    def handle_message(update, context):
+    def handle_message(self, update, context):
         text = str(update.message.text).lower()
         response = R.sample_responses(text)
+        if not response:
+            response = self.gpt_helper.get_message_answer_user(
+                user_id=update.message.from_user['id'],
+                user_prompt=text
+            )
 
         update.message.reply_text(response)
 
-    @staticmethod
-    def get_image(update, context, ocr_reader=EasyOcrReader()):
+    def get_image(self, update, context):
         photo = update.message.photo[-1].get_file()
 
         random_number = np.random.randint(500000)
         img_path = f'images/img_{random_number}.jpg'
         photo.download(img_path)
 
-        # https://stackoverflow.com/questions/59876271/how-to-process-images-from-telegram-bot-without-saving-to-file
-        # img = cv2.imread(photo)
-        # img = cv2.imdecode(np.fromstring(BytesIO(photo.download_as_bytearray()).getvalue(), np.uint8), 1)
+        answer = self.ocr_reader.process_image(img_path)
+        response = self.gpt_helper.get_message_answer_ingredients(answer)
 
-        answer = ocr_reader.process_image(img_path)
-
-        response = answer
         update.message.reply_text(response)
 
     @staticmethod
@@ -60,13 +59,15 @@ class TelegramBot:
         dp.add_handler(CommandHandler('start', self.start_command))
         dp.add_handler(CommandHandler('help', self.help_command))
 
-        dp.add_handler(MessageHandler(Filters.text, self.handle_message))
-        dp.add_handler(MessageHandler(Filters.photo, self.get_image))
+        static_handle_message = lambda update, context: self.handle_message(update, context)
+        dp.add_handler(MessageHandler(Filters.text, static_handle_message))
+
+        static_get_image = lambda update, context: self.get_image(update, context)
+        dp.add_handler(MessageHandler(Filters.photo, static_get_image))
         dp.add_error_handler(self.error)
 
         self.updater.start_polling()
         self.updater.idle()
-
 
 if __name__ == "__main__":
     # Read .env file
