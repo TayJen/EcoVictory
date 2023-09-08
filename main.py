@@ -35,7 +35,7 @@ class TelegramBot:
     @staticmethod
     async def help_command(update, context):
         await update.message.reply_text("Просто отправь фото состава продукта или задай вопрос по интересующему тебя вопросу " + \
-                                        "относительно питания и различных добавок")
+                                        "относительно питания и различных добавок.")
 
     async def handle_message(self, update, context):
         text = str(update.message.text).lower()
@@ -55,10 +55,15 @@ class TelegramBot:
         await (await context.bot.getFile(update.message.photo[-1].file_id)).download_to_drive(img_path)
 
         ingredients_str = await self.ocr_reader.process_image(img_path)
-        response = self.gpt_helper.get_message_answer_ingredients(
-            ingredient_list=ingredients_str,
-            user_id=update.message.from_user['id']
-        )
+        if ingredients_str == "":
+            response = "К сожалению, я не могу дать точный ответ без информации о составе продукта. Пожалуйста, предоставьте фото состава продукта, и я смогу определить наличие пищевых добавок и их номера и типы."
+        # elif 'состав' not in ingredients_str:
+        #     response = "К сожалению, я не могу дать точный ответ без информации о составе продукта. Возможно фотография состава размылена и я не могу считать текст состава. Сфотографируйте пожалуйста более четко."
+        else:
+            response = self.gpt_helper.get_message_answer_ingredients(
+                ingredient_list=ingredients_str,
+                user_id=update.message.from_user['id']
+            )
 
         await update.message.reply_text(response)
 
