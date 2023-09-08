@@ -1,6 +1,6 @@
 numpy==1.24.4
 opencv-python==4.8.0.76
-python-telegram-bot==13.15
-telegram==0.0.1
+python-telegram-bot==20.3
+# telegram==0.0.1
 openai==0.27.8
 python-dotenv~=1.0.0

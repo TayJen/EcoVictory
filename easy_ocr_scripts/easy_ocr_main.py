@@ -1,3 +1,4 @@
+import asyncio
 import easyocr
 import numpy as np
 
@@ -6,12 +7,12 @@ class EasyOcrReader:
     def __init__(self):
         self.reader = easyocr.Reader(['ru'])
 
-    def process_image(self, img_path: str):
+    async def process_image(self, img_path: str):
         bounds = self.reader.readtext(img_path, paragraph=True)
-        answer = self.postprocess(bounds)
+        answer = await self.postprocess(bounds)
         return answer
 
-    def postprocess(self, bounds):
+    async def postprocess(self, bounds):
         main_ingredient_list = ""
         for bound in bounds:
             main_ingredient_list += bound[1].lower() + ' '
