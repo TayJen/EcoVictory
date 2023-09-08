@@ -30,7 +30,7 @@ class TelegramBot:
     @staticmethod
     async def start_command(update, context):
         await update.message.reply_text(f"Привет {update.message.from_user.first_name}! " + \
-                                        "Я Нутрициолог ChatGPT, который также может по твоей фотографии состава разобрать добавки в продукте!")
+                                        "Я Эксперт по вопросам питания ChatGPT, который также может по твоей фотографии состава разобрать добавки в продукте!")
 
     @staticmethod
     async def help_command(update, context):

@@ -31,7 +31,9 @@ class ChatGPTExpert:
     def __init__(self, api_key: str, model_name: str):
         openai.api_key = api_key
         self.model_name = model_name
-        self.ingredient_prompt = "Найди все добавки Е, ароматизаторы, консерванты, усилители вкуса, лецитины в составе"
+        self.ingredient_prompt = "Найди все добавки E, ароматизаторы, консерванты, усилители вкуса, лецитины в составе продукта. Состав продукта:"
+        self.ingredient_prompt_end = "Выдели из состава пищевые добавки, разбей их по типу(группам).\n" + \
+            "Расскажи вреден ли он для здоровья человека? Могут ли быть какие либо противопоказания по имеющимся добавкам?"
         self.base_start_history = [{"role": "user", "content": START_PROMPT}, 
                                    {"role": "assistant", "content": "OK"}]
 
@@ -106,7 +108,7 @@ class ChatGPTExpert:
             :param ingredient_list: string, list of ingredients in the product
             :param user_id: int, id of the user, to track history of his prompts
         """
-        prompt = self.ingredient_prompt + '\n' + ingredient_list
+        prompt = self.ingredient_prompt + '\n' + ingredient_list + '\n' + self.ingredient_prompt_end
         print(prompt)
 
         # Get all users history and specific user_id history
