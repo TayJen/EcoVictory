@@ -1,0 +1,25 @@
+C4Component
+    accTitle: Мобильное приложение ClearNutritionExpert - Компонентная диаграмма
+    accDescr: Components
+
+    Container_Boundary(mobile_app, "Мобильное приложение ClearNutritionExpert") {
+        Component(ui_layer, "UI Layer", "Мобильное приложение", "Профиль, сканирование текста, рекомендации")
+        Component(ocr_scanner, "OCR Scanner", "Мобильное приложение", "Сканирование изображения и извлечение текста")
+        Component(recommendation_engine, "Recommendation Engine", "Мобильное приложение", "Анализ и рекомендации по продуктам")
+    }
+
+    Container_Boundary(api_server, "Серверное приложение (API)") {
+        Component(api_service, "API Service", "FastAPI", "Обработка запросов от мобильного приложения")
+        Component(ocr_service, "OCR Service", "Сервис распознавания текста", "Обработка изображений и возврат текста")
+        Component(recommendation_service, "Recommendation Service", "Сервис рекомендаций", "Анализ текста и рекомендации")
+    }
+
+    Component(easyocr, "Модель распознавания текста (easyOCR)", "Распознавание текста в изображениях")
+    Component(nlp_model, "Модель рекомендаций (NLP)", "Рекомендации по продуктам на основе текста")
+
+    Rel(client, ui_layer, "Использует")
+    Rel(ui_layer, api_service, "HTTP запросы")
+    Rel(api_service, ocr_service, "HTTP запросы")
+    Rel(api_service, recommendation_service, "HTTP запросы")
+    Rel(ocr_service, easyocr, "Внутренний вызов")
+    Rel(recommendation_service, nlp_model, "Внутренний вызов")

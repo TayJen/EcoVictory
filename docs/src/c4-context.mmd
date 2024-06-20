@@ -1,0 +1,17 @@
+C4Context
+    accTitle: Мобильное приложение ClearNutritionExpert - Контекстная диаграмма
+    accDescr: Context
+
+    Person(client, "Клиенты", "Нутрициологи, диетологи, люди с особенностями здоровья")
+    SystemBoundary(mobile_app, "Мобильное приложение ClearNutritionExpert") {
+        System(mobile_app, "Мобильное приложение", "Сканирование текстового состава продуктов, выдача рекомендаций по употреблению")
+    }
+
+    System(api_server, "Серверное приложение (API)", "Обработка запросов от мобильного приложения")
+    System_Ext(easyocr, "Модель распознавания текста (easyOCR)", "Распознавание текста в изображениях")
+    System_Ext(nlp_model, "Модель рекомендаций (NLP)", "Рекомендации по продуктам на основе текста")
+
+    Rel(client, mobile_app, "Использует")
+    Rel(mobile_app, api_server, "HTTP запросы")
+    Rel(api_server, easyocr, "HTTP запросы")
+    Rel(api_server, nlp_model, "HTTP запросы")

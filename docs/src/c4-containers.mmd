@@ -1,0 +1,25 @@
+C4Container
+    accTitle: Мобильное приложение ClearNutritionExpert - Контейнерная диаграмма
+    accDescr: Container
+
+    Person(client, "Клиенты", "Нутрициологи, диетологи, люди с особенностями здоровья")
+    System_Boundary(mobile_app, "Мобильное приложение ClearNutritionExpert") {
+        Container(ui_layer, "UI Layer", "Мобильное приложение", "Профиль, сканирование текста, рекомендации")
+        Container(recommendation_engine, "Recommendation Engine", "Мобильное приложение", "Анализ и рекомендации по продуктам")
+    }
+
+    Container(api_server, "Серверное приложение (API)", "FastAPI") {
+        Container(api_service, "API Service", "FastAPI", "Обработка запросов от мобильного приложения")
+        Container(ocr_service, "OCR Service", "Сервис распознавания текста", "Обработка изображений и возврат текста")
+        Container(recommendation_service, "Recommendation Service", "Сервис рекомендаций", "Анализ текста и рекомендации")
+    }
+
+    Container(easyocr, "Модель распознавания текста (easyOCR)", "Распознавание текста в изображениях")
+    Container(nlp_model, "Модель рекомендаций (NLP)", "Рекомендации по продуктам на основе текста")
+
+    Rel(client, ui_layer, "Использует")
+    Rel(ui_layer, api_service, "HTTP запросы")
+    Rel(api_service, ocr_service, "HTTP запросы")
+    Rel(api_service, recommendation_service, "HTTP запросы")
+    Rel(ocr_service, easyocr, "Внутренний вызов")
+    Rel(recommendation_service, nlp_model, "Внутренний вызов")
